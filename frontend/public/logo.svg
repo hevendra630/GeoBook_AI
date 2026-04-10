@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Book Details -->
+  <path fill="none" stroke="#f8fafc" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" d="M32 54V28c0 0-8-4-20-4v28c12 0 20 4 20 4z" />
+  <path fill="none" stroke="#f8fafc" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" d="M32 54V28c0 0 8-4 20-4v28c-12 0-20 4-20 4z" />
+  
+  <!-- Map Pin Mask (to cover book lines) -->
+  <path fill="#0f172a" d="M32 48l-12-16a15 15 0 1 1 24 0z" />
+  
+  <!-- Map Pin -->
+  <path fill="none" stroke="#ef4444" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" d="M32 48l-12-16a15 15 0 1 1 24 0z" />
+  <circle cx="32" cy="17" r="5" fill="none" stroke="#ef4444" stroke-width="4" />
+</svg>
