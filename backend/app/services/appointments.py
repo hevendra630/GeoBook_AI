@@ -290,7 +290,7 @@ def build_booking_email(*, business: Business, appointment: Appointment) -> tupl
 
     body = (
 
-        f"You have a new appointment booking in GeoBook AI.\n\n"
+        f"You have a new appointment booking from GeoBook AI.\n\n"
 
         f"Business: {business.name}\n"
 

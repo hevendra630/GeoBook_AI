@@ -238,17 +238,11 @@ async def handle_chat(
 
         
 
-        
-
         dist_ref = client_location if client_location else loc
-
         db_hits = await search_businesses(
-
             db,
-
-            latitude=loc.latitude,
-
-            longitude=loc.longitude,
+            latitude=dist_ref.latitude,
+            longitude=dist_ref.longitude,
 
             category=parsed.category,
 
@@ -491,12 +485,7 @@ async def handle_chat(
         if not google_places and keyword:
 
             logger.info("place_search_fallback.osm", keyword=keyword)
-
             
-
-        
-
-        
 
         results.sort(key=lambda x: (x.distance_meters or 9e18))
 
