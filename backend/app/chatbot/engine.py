@@ -208,9 +208,11 @@ async def handle_chat(
 
     logger.info(f"ENGINE_DEBUG: Message='{message}', Intent='{parsed.intent}', Category='{parsed.category}', Loc='{parsed.location_text}'")
 
-    with open("engine_debug.log", "a") as f:
-
-        f.write(f"Message='{message}', Intent='{parsed.intent}', Category='{parsed.category}', Loc='{parsed.location_text}'\n")
+    try:
+        with open("engine_debug.log", "a") as f:
+            f.write(f"Message='{message}', Intent='{parsed.intent}', Category='{parsed.category}', Loc='{parsed.location_text}'\n")
+    except Exception:
+        pass
 
     maps = GoogleMapsClient()
 

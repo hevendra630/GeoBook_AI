@@ -16,6 +16,14 @@ from app.db.models import Appointment, AppointmentStatus, Business, BusinessAvai
 
 from app.services.emailer import send_email
 
+def _log_debug_availability(msg: str):
+    try:
+        with open("debug_availability.log", "a") as f:
+            f.write(msg + "\n")
+    except Exception:
+        pass
+
+
 @dataclass(frozen=True)
 
 class AvailabilityCheck:
@@ -66,9 +74,7 @@ async def check_availability(
 
     logger.info(log_msg)
 
-    with open("debug_availability.log", "a") as f:
-
-        f.write(log_msg + "\n")
+    _log_debug_availability(log_msg)
 
     if not rules:
 
@@ -164,17 +170,13 @@ async def check_availability(
 
         logger.info(rule_log)
 
-        with open("debug_availability.log", "a") as f:
-
-            f.write(rule_log + "\n")
+        _log_debug_availability(rule_log)
 
         
 
         if end_at.date() > start_at.date():
 
-             with open("debug_availability.log", "a") as f:
-
-                 f.write("FAIL: Spans cross multiple days\n")
+             _log_debug_availability("FAIL: Spans cross multiple days")
 
              return AvailabilityCheck(ok=False, reason="Appointment spans across multiple days")
 
@@ -182,9 +184,7 @@ async def check_availability(
 
             fits_rule = True
 
-            with open("debug_availability.log", "a") as f:
-
-                f.write("SUCCESS: Fits rule!\n")
+            _log_debug_availability("SUCCESS: Fits rule!")
 
             break
 
@@ -192,9 +192,7 @@ async def check_availability(
 
     if not fits_rule:
 
-        with open("debug_availability.log", "a") as f:
-
-            f.write("FAIL: No matching rules for this weekday/time\n")
+        _log_debug_availability("FAIL: No matching rules for this weekday/time")
 
         return AvailabilityCheck(ok=False, reason="Requested time is outside business hours")
 

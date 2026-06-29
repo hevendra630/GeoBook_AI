@@ -16,4 +16,4 @@ rapidfuzz==3.12.2
 slowapi==0.1.9
 structlog==25.1.0
 google-generativeai==0.8.4
-
+asyncpg==0.30.0

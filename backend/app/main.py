@@ -38,11 +38,11 @@ def create_app() -> FastAPI:
 
     
 
-    sync_engine = create_engine("sqlite:///chatbot.db")
-
-    Base.metadata.create_all(bind=sync_engine)
-
-    sync_engine.dispose()
+    if settings.database_url.startswith("sqlite"):
+        sync_url = settings.database_url.replace("sqlite+aiosqlite://", "sqlite://")
+        sync_engine = create_engine(sync_url)
+        Base.metadata.create_all(bind=sync_engine)
+        sync_engine.dispose()
 
     
 
@@ -71,23 +71,18 @@ def create_app() -> FastAPI:
     app.include_router(api_router)
 
     @app.exception_handler(Exception)
-
     async def global_exception_handler(request: Request, exc: Exception):
-
         import traceback
-
-        with open("critical_error.log", "a") as f:
-
-            f.write(f"\n--- ERROR AT {datetime.now()} ---\n")
-
-            f.write(traceback.format_exc())
-
+        logger.exception("Global exception handler caught error", path=request.url.path)
+        try:
+            with open("critical_error.log", "a") as f:
+                f.write(f"\n--- ERROR AT {datetime.now()} ---\n")
+                f.write(traceback.format_exc())
+        except Exception:
+            pass
         return JSONResponse(
-
             status_code=500,
-
-            content={"detail": "Internal Server Error. Check critical_error.log"},
-
+            content={"detail": "Internal Server Error."},
         )
 
     @app.get("/health")
