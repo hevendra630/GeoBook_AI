@@ -57,7 +57,7 @@ def _sync_database_url() -> str:
             "DATABASE_URL is not set. Create backend/.env (copy from .env.example) "
             "or set DATABASE_URL in your shell environment."
         )
-    return url.replace("postgresql+asyncpg://", "postgresql://")
+    return url.replace("postgresql+asyncpg://", "postgresql://").replace("?pgbouncer=true", "").replace("&pgbouncer=true", "").replace(":6543/", ":5432/") + "?sslmode=require"
 
 
 def run_migrations_offline() -> None:
