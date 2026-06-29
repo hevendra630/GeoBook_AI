@@ -1,0 +1,22 @@
+services:
+  # -------------------------
+  # BACKEND (FastAPI)
+  # -------------------------
+  - type: web
+    name: geobook-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: ENVIRONMENT
+        value: prod
+      # Supabase URL will be read from the environment variables configured in Render Dashboard
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
