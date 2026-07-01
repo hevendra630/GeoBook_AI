@@ -38,7 +38,7 @@ async def get_current_user(
 
             raise ValueError("Missing subject")
 
-        user_id = str(UUID(sub))
+        user_id = UUID(sub)
 
     except (JWTError, ValueError) as e:
 

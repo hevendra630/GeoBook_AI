@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from uuid import UUID
+
 from pydantic import Field
 
 from app.schemas.common import APIModel
@@ -70,7 +72,7 @@ class ChatResponse(APIModel):
 
 class ChatSessionMeta(APIModel):
 
-    id: str
+    id: UUID
 
     title: str
 

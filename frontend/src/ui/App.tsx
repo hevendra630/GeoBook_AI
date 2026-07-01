@@ -12,6 +12,8 @@ function getStoredToken(): string | null {
   return localStorage.getItem("token");
 }
 
+setAuthToken(getStoredToken());
+
 function AppContent() {
   const [token, setToken] = useState<string | null>(() => getStoredToken());
   const [view, setView] = useState<View>("chat");
@@ -50,6 +52,7 @@ function AppContent() {
   }, [token, navigate]);
 
   const handleLogin = (newToken: string) => {
+    setAuthToken(newToken);
     setToken(newToken);
   };
 

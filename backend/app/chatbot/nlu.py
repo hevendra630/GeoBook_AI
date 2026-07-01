@@ -62,7 +62,7 @@ _CATEGORY_KEYWORDS: list[tuple[BusinessCategory, list[str]]] = [
 
     (BusinessCategory.clinic, ["clinic", "doctor", "physician", "health center", "medical clinic"]),
 
-    (BusinessCategory.salon, ["salon", "barber", "haircut", "spa", "beauty", "grooming", "parlour", "styling"]),
+    (BusinessCategory.salon, ["salon", "barber", "haircut", "spa", "beauty", "grooming", "parlour", "styling", "saloon", "saloons"]),
 
 ]
 
@@ -281,6 +281,8 @@ def _extract_search_term(text: str, intent: str, loc_text: str | None) -> str | 
         return None
 
     t = text.lower()
+
+    t = re.sub(r"^(can you|could you|would you|please)\s+", "", t).strip()
 
     prefixes = ["find me", "show me", "search for", "look for", "find", "show", "search", "the nearest", "the nearby", "nearest", "nearby"]
 

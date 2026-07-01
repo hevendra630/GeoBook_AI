@@ -20,7 +20,7 @@ class Token(APIModel):
 
 class UserOut(APIModel):
 
-    id: str
+    id: UUID
 
     email: EmailStr
 

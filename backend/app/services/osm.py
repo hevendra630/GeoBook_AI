@@ -8,7 +8,7 @@ import httpx
 
 from app.core.config import settings
 
-OSMPlaceType = Literal["restaurant", "school", "hospital", "police", "bus_stop"]
+OSMPlaceType = Literal["restaurant", "school", "hospital", "police", "bus_stop", "salon", "dental", "clinic"]
 
 @dataclass(frozen=True)
 
@@ -235,6 +235,18 @@ class OSMClient:
             
 
             return 'nwr["highway"="bus_stop"];nwr["amenity"="bus_station"];nwr["public_transport"="platform"]["bus"="yes"];'
+
+        if place_type == "salon":
+
+            return 'nwr["shop"="hairdresser"];nwr["shop"="beauty"];'
+
+        if place_type == "dental":
+
+            return 'nwr["healthcare"="dentist"];nwr["amenity"="dentist"];'
+
+        if place_type == "clinic":
+
+            return 'nwr["amenity"="clinic"];nwr["healthcare"="clinic"];nwr["healthcare"="doctor"];'
 
         raise ValueError("Unsupported type")
 

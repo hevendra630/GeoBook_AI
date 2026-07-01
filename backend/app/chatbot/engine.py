@@ -348,7 +348,7 @@ async def handle_chat(
 
                 CATEGORY_SYNONYMS = {
 
-                    BusinessCategory.salon: ["salon", "style", "barber", "spa", "cut", "hair", "beauty", "parlour", "grooming", "trim"],
+                    BusinessCategory.salon: ["salon", "style", "barber", "spa", "cut", "hair", "beauty", "parlour", "grooming", "trim", "saloon", "saloons"],
 
                     BusinessCategory.restaurant: ["food", "restaurant", "cafe", "diner", "pizza", "burger", "eat", "bake", "coffee", "hotel", "canteen", "kitchen", "biryani"],
 
@@ -380,9 +380,13 @@ async def handle_chat(
 
                     
 
-                    if is_cat_match and town_match:
+                    # Relaxed filter: if we have a specific category, Google already filtered by place_type.
 
-                        filtered.append(p)
+                    # We'll just include all of them unless they explicitly fail both checks terribly, but 
+
+                    # actually it's safer to just include all Google places returned for this location.
+
+                    filtered.append(p)
 
                 
 
@@ -487,7 +491,82 @@ async def handle_chat(
         if not google_places and keyword:
 
             logger.info("place_search_fallback.osm", keyword=keyword)
+
+            osm_type = None
+
+            if parsed.category == BusinessCategory.restaurant: osm_type = "restaurant"
+
+            elif parsed.category == BusinessCategory.school: osm_type = "school"
+
+            elif parsed.category == BusinessCategory.hospital: osm_type = "hospital"
+
+            elif parsed.category == BusinessCategory.police: osm_type = "police"
+
+            elif parsed.category == BusinessCategory.bus_stop: osm_type = "bus_stop"
+
+            elif parsed.category == BusinessCategory.salon: osm_type = "salon"
+
+            elif parsed.category == BusinessCategory.dental: osm_type = "dental"
+
+            elif parsed.category == BusinessCategory.clinic: osm_type = "clinic"
+
             
+
+            if osm_type:
+
+                try:
+
+                    osm = OSMClient()
+
+                    osm_places = await osm.nearby_search(
+
+                        latitude=loc.latitude,
+
+                        longitude=loc.longitude,
+
+                        place_type=osm_type,
+
+                        overpass_area_id=getattr(parsed, "_overpass_area_id", None)
+
+                    )
+
+                    for p in osm_places:
+
+                        dist = haversine_distance_meters(dist_ref.latitude, dist_ref.longitude, p.latitude, p.longitude)
+
+                        results.append(
+
+                            PlaceResult(
+
+                                source="osm",
+
+                                name=p.name,
+
+                                address=p.address or "",
+
+                                rating=None,
+
+                                distance_meters=dist,
+
+                                latitude=p.latitude,
+
+                                longitude=p.longitude,
+
+                                phone=p.phone,
+
+                                maps_url=p.maps_url,
+
+                                business_id=None,
+
+                                external_id=f"osm_{p.osm_type}_{p.osm_id}",
+
+                            )
+
+                        )
+
+                except Exception as e:
+
+                    logger.warning("osm_fallback.failed", error=str(e))
 
         results.sort(key=lambda x: (x.distance_meters or 9e18))
 
