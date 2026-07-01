@@ -4,7 +4,7 @@ import enum
 
 from datetime import datetime, time, timezone
 
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from sqlalchemy import (
 
@@ -31,6 +31,8 @@ from sqlalchemy import (
     UniqueConstraint,
 
 )
+
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -64,7 +66,7 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, default=uuid4)
 
     email: Mapped[str] = mapped_column(String(320), unique=True, index=True)
 
@@ -86,7 +88,7 @@ class Business(Base):
 
     __tablename__ = "businesses"
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, default=uuid4)
 
     name: Mapped[str] = mapped_column(String(200), index=True)
 
@@ -132,9 +134,9 @@ class BusinessAvailabilityRule(Base):
 
     __table_args__ = (UniqueConstraint("business_id", "weekday", "start_time", "end_time"),)
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, default=uuid4)
 
-    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("businesses.id", ondelete="CASCADE"))
+    business_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("businesses.id", ondelete="CASCADE"))
 
     weekday: Mapped[int] = mapped_column(Integer)  
 
@@ -158,11 +160,11 @@ class Appointment(Base):
 
     __table_args__ = (UniqueConstraint("business_id", "start_at"),)
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, default=uuid4)
 
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id", ondelete="CASCADE"))
+    user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"))
 
-    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("businesses.id", ondelete="CASCADE"))
+    business_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("businesses.id", ondelete="CASCADE"))
 
     start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
 
@@ -188,11 +190,11 @@ class ChatSession(Base):
 
     __tablename__ = "chat_sessions"
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, default=uuid4)
 
     title: Mapped[str] = mapped_column(String(100), default="New Chat")
 
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), index=True)
 
     
 

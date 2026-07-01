@@ -10,6 +10,7 @@ from app.db.base import Base
 
 # Alembic Config object, provides access to values within alembic.ini
 config = context.config
+#uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
