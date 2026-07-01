@@ -410,18 +410,6 @@ async def handle_chat(
 
                 continue
 
-                
-
-            
-
-            if parsed.location_text:
-
-                town = parsed.location_text.lower()
-
-                if town not in b.name.lower() and town not in (b.address or "").lower():
-
-                    continue
-
             results.append(
 
                 PlaceResult(
