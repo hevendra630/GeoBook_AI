@@ -5,8 +5,8 @@ import { api, setAuthToken } from "../lib/api";
 
 export function AuthPage({ onLogin }: { onLogin: (token: string) => void }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("demo@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

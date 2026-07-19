@@ -127,14 +127,14 @@ function BusinessRegister({ token }: { token: string | null }) {
   const [busy, setBusy] = useState(false);
 
   const [form, setForm] = useState({
-    name: "Downtown Dental",
-    category: "dental",
-    address: "123 Main St",
-    latitude: 40.7128,
-    longitude: -74.006,
-    phone: "+1 555-0100",
-    email: "hello@downtowndental.com",
-    description: "Dental clinic with appointment availability.",
+    name: "",
+    category: "restaurant",
+    address: "",
+    latitude: 0,
+    longitude: 0,
+    phone: "",
+    email: "",
+    description: "",
     availability: [{ weekday: 1, start_time: "09:00", end_time: "17:00", slot_minutes: 30 }],
   });
 
