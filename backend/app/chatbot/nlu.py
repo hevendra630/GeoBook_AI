@@ -78,11 +78,11 @@ _PLACE_TYPE_BY_CATEGORY: dict[BusinessCategory, str] = {
 
     BusinessCategory.bus_stop: "bus_station",
 
-    BusinessCategory.salon: "beauty_salon|hair_care",
+    BusinessCategory.salon: "beauty_salon",
 
     BusinessCategory.dental: "dentist",
 
-    BusinessCategory.clinic: "doctor|hospital",
+    BusinessCategory.clinic: "doctor",
 
 }
 

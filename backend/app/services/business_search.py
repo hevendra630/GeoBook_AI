@@ -41,10 +41,7 @@ async def search_businesses(
     stmt: Select[tuple[Business]] = select(Business)
 
     if category:
-
-        cat_val = category.value if hasattr(category, 'value') else str(category)
-
-        stmt = stmt.where(Business.category == cat_val)
+        stmt = stmt.where(Business.category == category)
 
     res = await db.execute(stmt)
 
