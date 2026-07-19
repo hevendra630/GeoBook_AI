@@ -19,7 +19,15 @@ CITIES = [
     {"name": "Rajahmundry", "lat": 17.0005, "lon": 81.8040},
     {"name": "Tirupati", "lat": 13.6288, "lon": 79.4192},
     {"name": "Kadapa", "lat": 14.4673, "lon": 78.8242},
-    {"name": "Anantapur", "lat": 14.6819, "lon": 77.6006}
+    {"name": "Anantapur", "lat": 14.6819, "lon": 77.6006},
+    {"name": "Hyderabad", "lat": 17.3850, "lon": 78.4867},
+    {"name": "Chennai", "lat": 13.0827, "lon": 80.2707},
+    {"name": "Bangalore", "lat": 12.9716, "lon": 77.5946},
+    {"name": "Kadiri", "lat": 14.1130, "lon": 78.1601},
+    {"name": "Mysore", "lat": 12.2958, "lon": 76.6394},
+    {"name": "Coimbatore", "lat": 11.0168, "lon": 76.9558},
+    {"name": "Madurai", "lat": 9.9252, "lon": 78.1198},
+    {"name": "Warangal", "lat": 17.9689, "lon": 79.5941},
 ]
 
 NAMES = {
@@ -52,7 +60,7 @@ async def seed():
     elif db_url and db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql+asyncpg://")
         
-    engine = create_async_engine(db_url)
+    engine = create_async_engine(db_url, connect_args={"statement_cache_size": 0})
     Session = async_sessionmaker(engine)
     
     gemini_key = os.getenv("GEMINI_API_KEY")
@@ -86,14 +94,14 @@ async def seed():
     
     if gemini_key:
         # Batch requests to Gemini (max 100 per batch usually)
-        batch_size = 50
+        batch_size = 100
         for i in range(0, len(businesses), batch_size):
             batch = businesses[i:i+batch_size]
             texts = [f"{b.name} - {b.category.value} - {b.description}" for b in batch]
             try:
                 # Wrap in asyncio.to_thread if it's blocking, but it's okay here
                 result = genai.embed_content(
-                    model="models/text-embedding-004",
+                    model="models/gemini-embedding-2",
                     content=texts,
                     task_type="retrieval_document"
                 )

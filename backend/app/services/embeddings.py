@@ -13,7 +13,7 @@ async def generate_embedding(text: str) -> list[float] | None:
         # Alternatively, genai provides async methods for chat, but embed_content is sync in this SDK version.
         # It's fine to run it directly for now or wrap in an executor.
         result = genai.embed_content(
-            model="models/text-embedding-004",
+            model="models/gemini-embedding-2",
             content=text,
             task_type="retrieval_document"
         )

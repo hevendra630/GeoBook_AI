@@ -24,9 +24,7 @@ from app.schemas.chat import (
     BookingConfirmation,
     ChatRequest,
     ChatResponse,
-    ChatResult,
     ClientLocation,
-    ParsedMessage,
     PlaceResult,
 )
 
@@ -565,11 +563,12 @@ async def handle_chat(
         
 
         results = results[:15]
-
-        assistant_message = "Here are the closest matches I found."
-
         
-
+        if not results:
+            assistant_message = f"I couldn't find any businesses matching your request in that area."
+        else:
+            assistant_message = "Here are the closest matches I found."
+        
         if session is not None and results:
 
             

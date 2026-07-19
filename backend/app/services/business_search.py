@@ -30,6 +30,7 @@ async def search_businesses(
     query: str | None,
     limit: int = 20,
     search_vector: list[float] | None = None,
+    radius_meters: float = 50000.0,
 ) -> list[BusinessHit]:
     stmt: Select[tuple[Business]] = select(Business)
     if category:
@@ -44,6 +45,9 @@ async def search_businesses(
     
     for b in businesses:
         dist = haversine_distance_meters(latitude, longitude, float(b.latitude), float(b.longitude))
+        if dist > radius_meters:
+            continue
+            
         rel = 0.0
         if query:
             rel = max(
