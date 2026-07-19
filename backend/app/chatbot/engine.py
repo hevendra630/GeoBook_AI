@@ -212,8 +212,14 @@ async def handle_chat(
 
     
 
-    
-
+    import dataclasses
+    if session is not None and getattr(session, "messages", None):
+        messages = getattr(session, "messages")
+        if messages:
+            last_msg = messages[-1]
+            if last_msg.get("role") == "assistant" and "Which business would you like to book?" in last_msg.get("text", ""):
+                parsed = dataclasses.replace(parsed, intent="book", target_text=message)
+                
     logger.info(f"ENGINE_DEBUG: Message='{message}', Intent='{parsed.intent}', Category='{parsed.category}', Loc='{parsed.location_text}'")
 
     try:
@@ -248,7 +254,7 @@ async def handle_chat(
 
         
 
-        dist_ref = client_location if client_location else loc
+        dist_ref = loc
         search_vector = await generate_embedding(parsed.raw)
         
         db_hits = await search_businesses(
@@ -596,8 +602,26 @@ async def handle_chat(
         assert loc is not None
 
         if not parsed.when:
-
-            raise HTTPException(status_code=422, detail="Please include a date/time (e.g., 'tomorrow at 4pm').")
+            # Try to recover 'when' from previous user messages in the session
+            recovered_when = None
+            if session is not None and getattr(session, "messages", None):
+                from app.chatbot.nlu import _extract_when
+                for msg in reversed(getattr(session, "messages")):
+                    if msg.get("role") == "user":
+                        recovered_when = _extract_when(msg.get("text", ""))
+                        if recovered_when:
+                            parsed = dataclasses.replace(parsed, when=recovered_when)
+                            break
+            
+            if not parsed.when:
+                return ChatResult(
+                    intent="book",
+                    normalized_location=loc,
+                    results=[],
+                    booking=None,
+                    assistant_message="Please include a date and time for your appointment (e.g., 'tomorrow at 4pm').",
+                    session_id=str(session.id) if session else None
+                )
 
         duration = _extract_duration_minutes(parsed.raw)
 

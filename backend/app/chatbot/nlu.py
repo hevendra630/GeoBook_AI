@@ -120,7 +120,7 @@ async def _parse_with_gemini(text: str) -> dict | None:
 
     try:
 
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
         response = await model.generate_content_async(prompt)
 
