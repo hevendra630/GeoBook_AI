@@ -110,10 +110,10 @@ async def _parse_with_gemini(text: str) -> dict | None:
     - search_term: For searching, the specific thing they are looking for (e.g. "orthopedic surgeon"), or null
 
     Example 1: "Find a hospital in Guntur"
-    Output: { "intent": "search", "category": "hospital", "location": "Guntur", "when": null, "target_text": null, "search_term": "hospital"} 
+    Output: {{ "intent": "search", "category": "hospital", "location": "Guntur", "when": null, "target_text": null, "search_term": "hospital"}} 
 
     Example 2: "Book an appointment at Downtown Dental tomorrow at 4pm"
-    Output: { "intent": "book", "category": "dental", "location": null, "when": "2026-04-02T16:00:00", "target_text": "Downtown Dental", "search_term": null} 
+    Output: {{ "intent": "book", "category": "dental", "location": null, "when": "2026-04-02T16:00:00", "target_text": "Downtown Dental", "search_term": null}} 
 
     Return ONLY the JSON.
     """
