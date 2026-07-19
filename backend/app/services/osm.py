@@ -313,7 +313,7 @@ class OSMClient:
         out tags center qt;
         """
 
-        async with httpx.AsyncClient(timeout=60, headers=self._headers()) as client:
+        async with httpx.AsyncClient(timeout=10, headers=self._headers()) as client:
 
             data = None
 
