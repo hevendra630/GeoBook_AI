@@ -9,6 +9,18 @@ export const api = axios.create({
   },
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("chat_session_id");
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export function setAuthToken(token: string | null) {
   if (token) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`;

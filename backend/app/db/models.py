@@ -35,6 +35,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from pgvector.sqlalchemy import Vector
 
 class Base(DeclarativeBase):
 
@@ -107,12 +108,11 @@ class Business(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
-
         DateTime(timezone=True),
-
         default=lambda: datetime.now(timezone.utc),
-
     )
+
+    embedding: Mapped[list[float] | None] = mapped_column(Vector(768), nullable=True)
 
     availability_rules: Mapped[list["BusinessAvailabilityRule"]] = relationship(
 

@@ -20,11 +20,21 @@ from app.core.logging import logger
 
 from app.db.models import Business, BusinessAvailabilityRule, BusinessCategory, User
 
-from app.schemas.chat import BookingConfirmation, ClientLocation, PlaceResult
+from app.schemas.chat import (
+    BookingConfirmation,
+    ChatRequest,
+    ChatResponse,
+    ChatResult,
+    ClientLocation,
+    ParsedMessage,
+    PlaceResult,
+)
 
 from app.services.appointments import create_appointment
 
-from app.services.chat_sessions import update_last_results
+from app.services.chat_sessions import get_or_create_session, update_last_results
+
+from app.services.embeddings import generate_embedding
 
 from app.services.business_search import search_businesses
 
@@ -241,35 +251,27 @@ async def handle_chat(
         
 
         dist_ref = client_location if client_location else loc
+        search_vector = await generate_embedding(parsed.raw)
+        
         db_hits = await search_businesses(
             db,
             latitude=dist_ref.latitude,
             longitude=dist_ref.longitude,
-
             category=parsed.category,
-
             query=parsed.raw,
-
             limit=15,
-
+            search_vector=search_vector,
         )
 
         if not db_hits and parsed.category is None:
-
             broad_hits = await search_businesses(
-
                 db,
-
                 latitude=loc.latitude,
-
                 longitude=loc.longitude,
-
                 category=None,
-
                 query=parsed.raw,
-
                 limit=25,
-
+                search_vector=search_vector,
             )
 
             
