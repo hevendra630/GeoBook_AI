@@ -20,6 +20,7 @@ engine: AsyncEngine = create_async_engine(
         # Disable prepared statement cache — required for PgBouncer transaction mode.
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
+        "prepared_statement_name_func": lambda: f"__asyncpg_{uuid.uuid4()}__",
         "server_settings": {"jit": "off"},
     },
 )
